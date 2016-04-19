@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Twitch API integration</string>
+    <string name="action_settings">Settings</string>
+    <string name="drawer_open">Displays menu items</string>
+    <string name="drawer_close">Hides menu items</string>
+    <string name="title_activity_browse_stream">Browse Stream</string>
+    <string name="title_activity_menu">menu</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_browse_channels">Browse Channels</string>
+    <string name="title_activity_home_screen">Twitch API integration</string>
+</resources>
