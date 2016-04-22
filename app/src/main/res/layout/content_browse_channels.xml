@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+<android.support.v4.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -12,42 +12,26 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.michael.twitchapiintegration.BrowseChannels"
     tools:showIn="@layout/activity_browse_channels">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/channelBanner"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:minHeight="100dp" />
 
-
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/profilePic"
-                android:layout_gravity="left" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/channelTitle"
-                android:layout_gravity="right"
-                style="@style/Base.TextAppearance.AppCompat.Title" />
-
-
-        </LinearLayout>
-    <WebView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/webView" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="4">
+            android:weightSum="4"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="47dp"
@@ -74,12 +58,52 @@
                 android:layout_weight="1"/>
 
         </LinearLayout>
-        <TextView
+        <WebView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/chatReadout"
-            android:gravity="bottom"
-            android:scrollbars="vertical"/>
+            android:layout_height="match_parent"
+            android:id="@+id/webStream">
+        </WebView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="6"
+            android:scrollbars="vertical"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/chatReadout"
+                android:scrollbars="vertical"
+                android:gravity="bottom"
+                android:layout_weight="5" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:weightSum="8">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:id="@+id/insertChat"
+                    android:layout_weight="7"
+                    android:maxLines = "10"
+                    android:textSize="@dimen/abc_text_size_body_1_material"
+                    android:nextFocusUp="@id/insertChat"
+                    android:nextFocusLeft="@id/insertChat"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Send"
+                    android:id="@+id/sendChat"
+                    android:layout_weight="1"
+                    android:onClick="sendChat"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
+
 

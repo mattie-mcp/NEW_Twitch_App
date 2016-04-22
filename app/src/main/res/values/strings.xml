@@ -10,4 +10,5 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_browse_channels">Browse Channels</string>
     <string name="title_activity_home_screen">Twitch API integration</string>
+    <string name="title_activity_browse_team">Team</string>
 </resources>

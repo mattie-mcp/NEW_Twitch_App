@@ -2,7 +2,6 @@ package com.example.michael.twitchapiintegration;
 
 import android.os.AsyncTask;
 import android.widget.TextView;
-
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -52,7 +51,6 @@ public class IRCConnection extends AsyncTask<Void, Void, Void>{
     private class Reader extends Thread{
 
         public void run(){
-
             try {
                 BufferedReader input =
                         new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -88,4 +86,10 @@ public class IRCConnection extends AsyncTask<Void, Void, Void>{
 
         return userName + ": " + message;
     }
+
+    public void sendMessage(String message){
+        out.println("PRIVMSG #" + channel  + " :" + message);
+        chat.append("Me: " + message + "\n");
+    }
+
 }

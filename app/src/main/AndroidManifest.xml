@@ -19,6 +19,17 @@
             android:name=".BrowseChannels"
             android:label="@string/title_activity_browse_channels"
             android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.michael.twitchapiintegration.MainActivity" />
+        </activity>
+        <activity
+            android:name=".BrowseTeams"
+            android:label="@string/title_activity_browse_team"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

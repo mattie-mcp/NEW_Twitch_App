@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.test.espresso.core.deps.guava.collect.Iterables;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +34,8 @@ public class BrowseChannels extends AppCompatActivity {
     private TextView chat;
     ImageView channelBanner;
     ImageView profilePic;
+    private IRCConnection ircConnection;
+    private EditText chatMessage;
     private WebView stream;
 
     @Override
@@ -43,32 +47,47 @@ public class BrowseChannels extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        titleBanner = (TextView) findViewById(R.id.channelTitle);       //Title
         followersView = (TextView) findViewById(R.id.followerText);      //How many followers channel has
         viewerText = (TextView) findViewById(R.id.viewerText);        //How many viewers are watching stream
-        profilePic = (ImageView) findViewById(R.id.profilePic);         //Profile Pic
         channelBanner = (ImageView) findViewById(R.id.channelBanner);   //Channel logo
         chat = (TextView)findViewById(R.id.chatReadout);
         chat.setMovementMethod(new ScrollingMovementMethod());
         channelId = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        chatMessage = (EditText) findViewById(R.id.insertChat);
+        stream = (WebView) findViewById(R.id.webStream);
 
         RetrieveStreams t = new RetrieveStreams();
+        chatMessage.setMovementMethod(new ScrollingMovementMethod());
+        chat.setMovementMethod(new ScrollingMovementMethod());
         t.execute(channelId);
 
         try {
-            new IRCConnection("irc.chat.twitch.tv",6667,channelId.toLowerCase(),chat).execute();
+            ircConnection = new IRCConnection("irc.chat.twitch.tv",6667,channelId.toLowerCase(),chat);
+            ircConnection.execute();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        stream = (WebView) findViewById(R.id.webView);
-        //String myStream= "http://player.twitch.tv/?channel=" + channelId;
-        String myStream= "https://www.twitch.tv/riotgamesbrazil";
+
+        getSupportActionBar().setTitle(channelId);
+        String myStream= "http://player.twitch.tv/?channel=" + channelId;
+//        String myStream= "https://www.twitch.tv/riotgamesbrazil";
         stream.setWebChromeClient(new WebChromeClient());
         WebSettings webSettings = stream.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         stream.loadUrl(myStream);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public class RetrieveStreams extends AsyncTask<String, String, String> {
@@ -105,28 +124,26 @@ public class BrowseChannels extends AppCompatActivity {
             super.onPostExecute(s);
             try {
                 JSONObject streams = new JSONObject(s);
-                profileImageUrl = streams.getString("logo");
+                //profileImageUrl = streams.getString("logo");
                 bannerImageUrl = streams.getString("profile_banner");
                 status = streams.getString("status");
                 followers = streams.getString("followers");
                 views = streams.getString("views");
 
-                titleBanner.setText(channelId);
+                //titleBanner.setText(channelId);
                 viewerText.setText(views);
                 followersView.setText(followers);
 
                 try{
-                    URL bannerURL = new URL(bannerImageUrl);
-                    URL profileURL = new URL(profileImageUrl);
 
                     new DownloadImageTask((ImageView) findViewById(R.id.channelBanner))
                             .execute(bannerImageUrl);
 
-                    new DownloadImageTask((ImageView) findViewById(R.id.profilePic))
-                            .execute(profileImageUrl);
+//                    new DownloadImageTask((ImageView) findViewById(R.id.profilePic))
+//                            .execute(profileImageUrl);
                 }
                 catch(Exception ex){
-
+                    String k = ex.toString();
                 }
 
 
@@ -177,19 +194,16 @@ public class BrowseChannels extends AppCompatActivity {
                 followers = streams.getString("followers");
                 views = streams.getString("views");
 
-                titleBanner.setText(channelId);
+                //titleBanner.setText(channelId);
                 viewerText.setText(views);
                 followersView.setText(followers);
 
                 try{
-                    URL bannerURL = new URL(bannerImageUrl);
-                    URL profileURL = new URL(profileImageUrl);
-
                     new DownloadImageTask((ImageView) findViewById(R.id.channelBanner))
                             .execute(bannerImageUrl);
 
-                    new DownloadImageTask((ImageView) findViewById(R.id.profilePic))
-                            .execute(profileImageUrl);
+//                    new DownloadImageTask((ImageView) findViewById(R.id.profilePic))
+//                            .execute(profileImageUrl);
                 }
                 catch(Exception ex){
 
@@ -228,4 +242,8 @@ public class BrowseChannels extends AppCompatActivity {
         }
     }
 
+    public void sendChat(View view){
+        ircConnection.sendMessage(chatMessage.getText().toString());
+        this.chatMessage.setText("");
+    }
 }
